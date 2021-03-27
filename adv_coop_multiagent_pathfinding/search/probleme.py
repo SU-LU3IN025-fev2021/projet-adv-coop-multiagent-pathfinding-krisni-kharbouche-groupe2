@@ -20,7 +20,12 @@ def distManhattan(p1,p2):
         """
     (x1,y1)=p1
     (x2,y2)=p2
-    return abs(x1-x2)+abs(y1-y2) 
+    return abs(x1-x2)+abs(y1-y2)
+
+def cout(path) :
+    """ Renvoie le cout du chemin du joueur passé en paramètre
+        """
+    return len(path)
 
 
 
@@ -184,7 +189,7 @@ def astar(p,verbose=False,stepwise=False):
 
 ###############################################################################
 # GREDDY BEST FIRST
-# On établit deux listes de Noeud (une liste ferme de noeuds ouverts et une liste de noeuds fermés)
+# On établit deux listes de Noeud (une liste de noeuds ouverts et une liste de noeuds fermés)
 # Les noeuds ouverts sont ceux que l'on étudie
 # Les noeuds fermés sont ceux que l'on a déjà étudié
 # Le but est d'étudier le noeud le plus prometteur dans la liste des noeuds ouverts
@@ -218,7 +223,7 @@ def greedyBestFirst(p) :
     #   - on arrete l'algorithme de recherche
     #   - on renvoie le chemin du noeud en cours (soit le noeud but) jusqu'au noeud racine (noeud.pere == None)
     # Attention : si à un moment donné, la liste des noeuds ouverts est vide, cela signifie que le probleme est sans résolution
-       
+    
     while (openNodes != []) and (not p.estBut(bestNode.etat)) :
         # On ajoute le meilleur noeud à la liste des noeuds fermés et on le retire de la liste des noeuds ouverts
         closedNodes.append(bestNode)
@@ -229,18 +234,26 @@ def greedyBestFirst(p) :
 
         # On ajoute les noeuds voisins du meilleur noeud à la liste des noeuds ouverts
         for n in nouveauxNoeuds :
-            if n not in openNodes or n not in closedNodes:
+
+            liste_etats = list()
+            for e in openNodes :
+                liste_etats.append(e.etat)
+            for e in closedNodes :
+                liste_etats.append(e.etat)
+
+            if (n.etat not in liste_etats) :
                 openNodes.append(n)
 
         # On cherche le noeud optimal parmi les noeuds ouverts
         newBestNode = openNodes[0]
         for n in openNodes[1::] :
-            # On compare les deux noeuds et si le noeud n est plus optimal que le meilleur noeud, bestNode = n (avec la distance de Manhantan)
-            if (distManhattan(n.etat, p.but) < distManhattan(bestNode.etat, p.but)) : 
-                bestNode = n
+            # On compare les deux noeuds et si le noeud n est plus optimal que le meilleur noeud, newBestNode = n (avec la distance de Manhantan)
+            if (distManhattan(n.etat, p.but) < distManhattan(newBestNode.etat, p.but)) : 
+                newBestNode = n
+        bestNode = newBestNode
 
     # On renvoie le chemin jusqu'au but
-    n=bestNode
+    n = bestNode
     path = []
 
     while n != None :
@@ -248,7 +261,11 @@ def greedyBestFirst(p) :
         n = n.pere
 
     return path[::-1]
-    return path
+
+
+###############################################################################
+# 
+###############################################################################
 
 ###############################################################################
 # AUTRES ALGOS DE RESOLUTIONS...
