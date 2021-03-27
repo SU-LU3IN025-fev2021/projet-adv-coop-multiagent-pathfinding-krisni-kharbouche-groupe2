@@ -123,6 +123,7 @@ def main():
     p = ProblemeGrid2D(initStates[0],objectifs[0],g,'manhattan')
     # path = probleme.astar(p)
     path = probleme.greedyBestFirst(p)
+    # path = probleme.randomBestFirst(p)
     print ("Chemin trouvé:", path)    
     
     #-------------------------------

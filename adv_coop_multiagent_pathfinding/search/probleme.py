@@ -234,8 +234,8 @@ def greedyBestFirst(p) :
 
         # On ajoute les noeuds voisins du meilleur noeud à la liste des noeuds ouverts
         for n in nouveauxNoeuds :
-
             liste_etats = list()
+
             for e in openNodes :
                 liste_etats.append(e.etat)
             for e in closedNodes :
@@ -260,13 +260,77 @@ def greedyBestFirst(p) :
         path.append(n.etat)
         n = n.pere
 
+    print("Greedy Best First - Temps de calcul:", time.time() - startTime)
+    
     return path[::-1]
 
 
 ###############################################################################
-# 
+# RANDOM BEST FIRST
 ###############################################################################
 
+def randomBestFirst(p) :
+    """
+    application de l'algorithme Random Best First
+    sur un probleme donné
+    """
+
+    startTime = time.time() # On commence le timer
+
+    openNodes = list() # Liste des noeuds ouverts
+    closedNodes = list() # Liste des noeuds fermés
+
+    nodeInit = Noeud(p.init,0,None) # Noeud initial
+    openNodes.append(nodeInit) # On ajoute le noeud initial aux noeuds ouverts
+    bestNode = nodeInit # Best node est le noeud en cours d'utilisation
+
+    # Etapes de l'algo de recherche
+    # 1) On vérifie si le noeud en cours est l'objectif
+    # 2) Si non :
+    #   - on ajoute tout les noeuds voisins du noeud en cours dans la liste des noeuds ouverts (si ils ne sont pas déjà présent dans une des deux listes)
+    #   - on ajoute dans la liste des noeuds fermés le noeud en cours
+    #   - on choisit comme nouveau noeud prometteur le premier noeud de la liste des noeuds ouverts
+    #   - on passe le noeud prometteur en tant que noeud en cours
+    #   - on répète le procédé
+    # 3) Si oui :
+    #   - on arrete l'algorithme de recherche
+    #   - on renvoie le chemin du noeud en cours (soit le noeud but) jusqu'au noeud racine (noeud.pere == None)
+    # Attention : si à un moment donné, la liste des noeuds ouverts est vide, cela signifie que le probleme est sans résolution
+    
+    while (openNodes != []) and (not p.estBut(bestNode.etat)) :
+        # On ajoute le meilleur noeud à la liste des noeuds fermés et on le retire de la liste des noeuds ouverts
+        closedNodes.append(bestNode)
+        openNodes.remove(bestNode)
+
+        # Crée la liste des voisins du meilleur Noeud
+        nouveauxNoeuds = bestNode.expand(p)
+
+        # On ajoute les noeuds voisins du meilleur noeud à la liste des noeuds ouverts
+        for n in nouveauxNoeuds :
+            liste_etats = list()
+
+            for e in openNodes :
+                liste_etats.append(e.etat)
+            for e in closedNodes :
+                liste_etats.append(e.etat)
+
+            if (n.etat not in liste_etats) :
+                openNodes.append(n)
+
+        # Le nouveau noeud optimal est le premier de la liste des noeuds ouverts
+        bestNode = openNodes[0]
+
+    # On renvoie le chemin jusqu'au but
+    n = bestNode
+    path = []
+
+    while n != None :
+        path.append(n.etat)
+        n = n.pere
+
+    print("Random Best First - Temps de calcul:", time.time() - startTime)
+
+    return path[::-1]
 ###############################################################################
 # AUTRES ALGOS DE RESOLUTIONS...
 ###############################################################################
