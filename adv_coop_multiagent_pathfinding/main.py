@@ -117,16 +117,13 @@ def main():
     # calcul A* pour le joueur 1
     #-------------------------------
     
-
-    
     g =np.ones((nbLignes,nbCols),dtype=bool)  # par defaut la matrice comprend des True  
     for w in wallStates:            # putting False for walls
         g[w]=False
     p = ProblemeGrid2D(initStates[0],objectifs[0],g,'manhattan')
     #path = probleme.astar(p)
     path = probleme.greedyBestFirst(p)
-    print ("Chemin trouvé:", path)
-        
+    print ("Chemin trouvé:", path)    
     
     #-------------------------------
     # Boucle principale de déplacements 
@@ -135,7 +132,7 @@ def main():
             
     posPlayers = initStates
 
-    for i in range(iterations):
+    for i in range(iterations) :
         
         # on fait bouger chaque joueur séquentiellement
         
