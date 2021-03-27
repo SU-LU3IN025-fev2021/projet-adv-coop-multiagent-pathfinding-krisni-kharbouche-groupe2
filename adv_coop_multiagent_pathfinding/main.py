@@ -101,7 +101,7 @@ def main():
     #-------------------------------
     
     objectifs = goalStates
-    random.shuffle(objectifs)
+    #random.shuffle(objectifs)
     print("Objectif joueur 0", objectifs[0])
     print("Objectif joueur 1", objectifs[1])
 
@@ -123,7 +123,7 @@ def main():
     for w in wallStates:            # putting False for walls
         g[w]=False
     p = ProblemeGrid2D(initStates[0],objectifs[0],g,'manhattan')
-    # path = probleme.astar(p)
+    #path = probleme.astar(p)
     path = probleme.greedyBestFirst(p)
     print ("Chemin trouvé:", path)
         
