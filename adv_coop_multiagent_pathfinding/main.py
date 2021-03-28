@@ -40,6 +40,7 @@ game = Game()
 def init(_boardname=None):
     global player,game
     name = _boardname if _boardname is not None else 'demoMap'
+    name = 'exAdvCoopMap'
     game = Game('Cartes/' + name + '.json', SpriteBuilder)
     game.O = Ontology(True, 'SpriteSheet-32x32/tiny_spritesheet_ontology.csv')
     game.populate_sprite_names(game.O)
@@ -69,13 +70,15 @@ def main():
        
     print("lignes", nbLignes)
     print("colonnes", nbCols)
-    
-    
+
     players = [o for o in game.layers['joueur']]
     nbPlayers = len(players)
+    # On veut un nombre de joueurs pairs (afin de réaliser des équipes d'effectifs égaux)
+    if (nbPlayers % 2) :
+        print("Le nombre de joueurs n'est pas pair (impossible de créer des équipes d'effectifs égaux). Fermeture du jeu.")
+        pygame.quit()
+        exit()
     score = [0]*nbPlayers
-    
-       
            
     # on localise tous les états initiaux (loc du joueur)
     # positions initiales des joueurs
@@ -101,10 +104,17 @@ def main():
     #-------------------------------
     
     objectifs = goalStates
-    #random.shuffle(objectifs)
-    print("Objectif joueur 0", objectifs[0])
-    print("Objectif joueur 1", objectifs[1])
+    random.shuffle(objectifs)
+    for j in range(nbPlayers) :
+        print("Objectif joueur ", j, ":", objectifs[0])
 
+    #-------------------------------
+    # Création de la liste des chemins, des problemes et des temps de parcours
+    #-------------------------------
+
+    liste_prob = list() # Permet de regrouper tout les problemes par joueur
+    liste_path = list() # Permet de regrouper tout les chemins par joueur
+    liste_temps = list() # Permet de regrouper tout les temps par joueur
     
     #-------------------------------
     # Carte demo 
@@ -112,74 +122,120 @@ def main():
     # Joueur 0: A*
     # Joueur 1: random walker
     #-------------------------------
-    
+
     #-------------------------------
-    # calcul A* pour le joueur 1
+    # Calculs des chemins pour les joueurs
     #-------------------------------
-    
-    g =np.ones((nbLignes,nbCols),dtype=bool)  # par defaut la matrice comprend des True  
-    for w in wallStates:            # putting False for walls
-        g[w]=False
-    p = ProblemeGrid2D(initStates[0],objectifs[0],g,'manhattan')
-    #path = probleme.astar(p)
-    path = probleme.greedyBestFirst(p)
-    # path = probleme.randomBestFirst(p)
-    print ("Chemin trouvé:", path)    
-    
+
+    for j in range(nbPlayers) :
+        g =np.ones((nbLignes,nbCols),dtype=bool)  # par defaut la matrice comprend des True 
+
+        for w in wallStates:            # putting False for walls
+            g[w]=False
+
+        liste_prob.append(ProblemeGrid2D(initStates[j],objectifs[j],g,'manhattan')) # On ajoute le probleme à la liste des problèmes
+
+        # On crée le path vers l'objectif avec l'algorithme de notre choix
+        path = probleme.astar(liste_prob[j])
+        # path = probleme.greedyBestFirst(liste_prob[j])
+        # path = probleme.randomBestFirst(liste_prob[j])
+
+        # On ajoute le path à la liste des paths
+        liste_path.append(path)
+        print ("Joueur", j, "Chemin trouvé:", liste_path[j])
+
+        # On initialise le temps à 0
+        liste_temps.append(0)
+
     #-------------------------------
     # Boucle principale de déplacements 
     #-------------------------------
     
-            
+    #-------------------------------
+    # Déplacements sans random
+    #-------------------------------
+
     posPlayers = initStates
+    it = 0
 
-    for i in range(iterations) :
-        
-        # on fait bouger chaque joueur séquentiellement
-        
-        # Joeur 0: suit son chemin trouve avec A* 
-        
-        row,col = path[i]
-        posPlayers[0]=(row,col)
-        players[0].set_rowcol(row,col)
-        print ("pos 0:", row,col)
-        if (row,col) == objectifs[0]:
-            score[0]+=1
-            print("le joueur 0 a atteint son but!")
-            break
-        
-        # Joueur 1: fait du random walk
-        
-        row,col = posPlayers[1]
+    # On boucle tant que les joueurs ne sont tous pas arrivés à leur objectif
+    while ((sum(score) != nbPlayers) and (it < iterations)) :
 
-        while True: # tant que pas legal on retire une position
-            x_inc,y_inc = random.choice([(0,1),(0,-1),(1,0),(-1,0)])
-            next_row = row+x_inc
-            next_col = col+y_inc
-            if legal_position(next_row,next_col):
-                break
-        players[1].set_rowcol(next_row,next_col)
-        print ("pos 1:", next_row,next_col)
-    
-        col=next_col
-        row=next_row
-        posPlayers[1]=(row,col)
+        for j in range(nbPlayers) :
+
+            # On initialise row,col à init du probleme
+            row,col = liste_prob[j].init
+
+            # On vérifie si le joueur n'a pas terminé son chemin
+            if (len(liste_path[j]) != 0) : 
+
+                # Gestion de la collision avec d'autres joueurs
+                for k in range(nbPlayers) :
+                    if (k != j) :
+                        if (len(liste_path[k]) != 0) :
+                            if (liste_path[k][0] == liste_path[j][0]) :
+                                
+                                # Il y a collision entre agents
+                                print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
+
+                                # On ajoute la position de l'agent rencontre comme mur temporairement
+                                l,c = liste_path[k][0]
+                                liste_prob[j].grid[l][c] = False
+
+                                liste_path[j] = probleme.astar(liste_prob[j]) # Pour parcourir en A*
+                                # liste_path[j] = probleme.greedyBestFirst(liste_prob[j]) # Pour parcourir en GreedyBestFirst
+                                # liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
+                                print(liste_path[j])
+
+                                # On retire la position de l'agent rencontre comme mur
+                                liste_prob[j].grid[l][c] = True
+
+                            if (liste_prob[k].init == liste_path[j][0]) :
+                                
+                                # Il y a collision entre agents
+                                print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
+
+                                # On ajoute la position de l'agent rencontre comme mur temporairement
+                                l,c = liste_path[k][0]
+                                liste_prob[j].grid[l][c] = False
+
+                                # liste_path[j] = probleme.astar(liste_prob[j]) # Pour parcourir en A*
+                                liste_path[j] = probleme.greedyBestFirst(liste_prob[j]) # Pour parcourir en GreedyBestFirst
+                                print(liste_path[j])
+                                # liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
+
+                                # On retire la position de l'agent rencontre comme mur
+                                liste_prob[j].grid[l][c] = True
+                            
+
+                # Déplacement du joueur
+                row,col = liste_path[j][0]
+                posPlayers[j]=(row,col)
+                players[j].set_rowcol(row,col) # On déplace le joueur
+
+                liste_temps[j] = liste_temps[j] + 1 # On incrémente de 1 le temps de parcours du joueur
+
+                liste_prob[j].init = (row,col) # On modifie l'état initial du probleme
+                liste_path[j] = liste_path[j][1::] # On supprime le premier élément de la liste
+
+                # Dans le cas où le chemin est vide, on ajoute l'état final du joueur comme mur dans les problèmes de tout les joueurs
+                if (len(liste_path[j]) == 0) :
+                    for i in range(nbPlayers) :
+                        liste_prob[i].grid[row][col] = False
             
-        if (row,col) == objectifs[1]:
-            score[1]+=1
-            print("le joueur 1 a atteint son but!")
-            break
-            
-            
-        
+            print ("Tour de jeu", it, "- Position joueur", j, ":", row,col)
+
+            if (score[j] == 0) :
+                if (row,col) == objectifs[j]:
+                    score[j]+=1
+                    print("Le joueur", j, " a atteint son but!")
+
         # on passe a l'iteration suivante du jeu
         game.mainiteration()
-
-                
-        
-            
+        it = it + 1
     
-    print ("scores:", score)
+    print ("Scores:", score)
+    print("Temps de parcours:", liste_temps)
     pygame.quit()
     
     
