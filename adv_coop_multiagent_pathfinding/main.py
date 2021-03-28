@@ -136,8 +136,8 @@ def main():
         liste_prob.append(ProblemeGrid2D(initStates[j],objectifs[j],g,'manhattan')) # On ajoute le probleme à la liste des problèmes
 
         # On crée le path vers l'objectif avec l'algorithme de notre choix
-        path = probleme.astar(liste_prob[j])
-        # path = probleme.greedyBestFirst(liste_prob[j])
+        # path = probleme.astar(liste_prob[j])
+        path = probleme.greedyBestFirst(liste_prob[j])
         # path = probleme.randomBestFirst(liste_prob[j])
 
         # On ajoute le path à la liste des paths
@@ -182,8 +182,8 @@ def main():
                                 l,c = liste_path[k][0]
                                 liste_prob[j].grid[l][c] = False
 
-                                liste_path[j] = probleme.astar(liste_prob[j]) # Pour parcourir en A*
-                                # liste_path[j] = probleme.greedyBestFirst(liste_prob[j]) # Pour parcourir en GreedyBestFirst
+                                # liste_path[j] = probleme.astar(liste_prob[j]) # Pour parcourir en A*
+                                liste_path[j] = probleme.greedyBestFirst(liste_prob[j]) # Pour parcourir en GreedyBestFirst
                                 # liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                                 print(liste_path[j])
 
