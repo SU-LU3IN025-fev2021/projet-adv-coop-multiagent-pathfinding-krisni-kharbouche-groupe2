@@ -230,7 +230,7 @@ def main():
                     score[j]+=1
                     print("Le joueur", j, " a atteint son but!")
 
-        # on passe a l'iteration suivante du jeu
+        # On passe a l'iteration suivante du jeu
         game.mainiteration()
         it = it + 1
     
@@ -238,21 +238,9 @@ def main():
     print("Temps de parcours:", liste_temps)
     pygame.quit()
     
-    
-    
-    
+       
     #-------------------------------
-    
-        
-        
-    
-    
-        
-   
 
- 
-    
-   
 
 if __name__ == '__main__':
     main()
