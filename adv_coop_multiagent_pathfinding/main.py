@@ -109,13 +109,39 @@ def main():
         print("Objectif joueur ", j, ":", objectifs[0])
 
     #-------------------------------
-    # Création de la liste des chemins, des problemes et des temps de parcours
+    # Création de la liste des chemins, des problemes, de choix d'algo et de temps de parcours
     #-------------------------------
 
     liste_prob = list() # Permet de regrouper tout les problemes par joueur
     liste_path = list() # Permet de regrouper tout les chemins par joueur
     liste_temps = list() # Permet de regrouper tout les temps par joueur
-    
+    liste_algo = list() # Permet de regrouper les choix des joueurs en termes d'algo de recherche
+
+    #-------------------------------
+    # Attribution des algos de recherche
+    #-------------------------------
+
+    # Indice d'algo de recherche :
+    # 0 : A*
+    # 1 : GreedyBestFirst
+    # 2 : RandomBestFirst
+    list_algo = [0, 0] 
+
+    # Vérification des valeurs dans list_algo
+    for i in range(len(list_algo)) :
+        if ((list_algo[i] < 0) or (list_algo[i] > 2)) : # Une valeur non-existante d'algo a été attribuée
+            list_algo[i] = random.randint(0, 2) # On donne un algo aléatoire au joueur j
+
+
+    if (len(list_algo) != nbPlayers) :
+        # Dans le cas où le nombre d'algos par joueur ne correspond pas au nombre de joueurs
+        print("Erreur - Le nombre d'algos dans list_algo ne correspond pas avec le nombre de joueurs. Attribution aléatoire des algos pour tout les joueurs.")
+        list_algo = []
+
+        # On attribue aléatoirement des algos aux joueurs
+        for i in range(nbPlayers) :
+            list_algo.append(random.randint(0, 2))
+
     #-------------------------------
     # Carte demo 
     # 2 joueurs 
@@ -135,10 +161,16 @@ def main():
 
         liste_prob.append(ProblemeGrid2D(initStates[j],objectifs[j],g,'manhattan')) # On ajoute le probleme à la liste des problèmes
 
-        # On crée le path vers l'objectif avec l'algorithme de notre choix
-        # path = probleme.astar(liste_prob[j])
-        path = probleme.greedyBestFirst(liste_prob[j])
-        # path = probleme.randomBestFirst(liste_prob[j])
+        # On crée path en avance :
+        path = list()
+
+        # On crée le path vers l'objectif avec l'algorithme de notre choix (choix effectue dans liste_algo plus haut)
+        if (list_algo[j] == 0) :
+            path = probleme.astar(liste_prob[j])
+        if (list_algo[j] == 1) :
+            path = probleme.greedyBestFirst(liste_prob[j])
+        if (list_algo[j] == 2) :
+            path = probleme.randomBestFirst(liste_prob[j])
 
         # On ajoute le path à la liste des paths
         liste_path.append(path)
@@ -191,6 +223,23 @@ def main():
                                 liste_prob[j].grid[l][c] = True
 
                             if (liste_prob[k].init == liste_path[j][0]) :
+                                
+                                # Il y a collision entre agents
+                                print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
+
+                                # On ajoute la position de l'agent rencontre comme mur temporairement
+                                l,c = liste_path[k][0]
+                                liste_prob[j].grid[l][c] = False
+
+                                # liste_path[j] = probleme.astar(liste_prob[j]) # Pour parcourir en A*
+                                liste_path[j] = probleme.greedyBestFirst(liste_prob[j]) # Pour parcourir en GreedyBestFirst
+                                print(liste_path[j])
+                                # liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
+
+                                # On retire la position de l'agent rencontre comme mur
+                                liste_prob[j].grid[l][c] = True
+
+                            if (posPlayers[k] == liste_path[j][0]) :
                                 
                                 # Il y a collision entre agents
                                 print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")

@@ -185,6 +185,9 @@ def astar(p,verbose=False,stepwise=False):
     while n!=None :
         path.append(n.etat)
         n = n.pere
+
+    print("A* - Temps de calcul:", time.time() - startTime)
+
     return path[::-1] # extended slice notation to reverse list
 
 ###############################################################################
@@ -331,6 +334,7 @@ def randomBestFirst(p) :
     print("Random Best First - Temps de calcul:", time.time() - startTime)
 
     return path[::-1]
+
 ###############################################################################
 # AUTRES ALGOS DE RESOLUTIONS...
 ###############################################################################
