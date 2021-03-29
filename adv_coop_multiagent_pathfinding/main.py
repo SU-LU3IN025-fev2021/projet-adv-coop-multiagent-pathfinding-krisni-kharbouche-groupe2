@@ -41,10 +41,11 @@ def init(_boardname=None):
     global player,game
     name = _boardname if _boardname is not None else 'demoMap'
     # name = 'exAdvCoopMap'
+    name = 'bridgeMap'
     game = Game('Cartes/' + name + '.json', SpriteBuilder)
     game.O = Ontology(True, 'SpriteSheet-32x32/tiny_spritesheet_ontology.csv')
     game.populate_sprite_names(game.O)
-    game.fps = 5  # frames per second
+    game.fps = 5 # frames per second
     game.mainiteration()
     player = game.player
     
@@ -157,8 +158,7 @@ def main():
     # Compteur de stratégies
     nbStrats = 7
 
-    # list_algo = [0, 0, 0, 0, 0, 0] # Hypothese : len(list_algo) == nbPlayers
-    list_algo = [5, 5]
+    list_algo = [1, 1] # Hypothese : len(list_algo) == nbPlayers
     liste_timer = [-1] * nbPlayers # Les timers sont utilisés dans certains algorithmes, ils seront initialisés plus tard
     timer = 5 # Nombre d'itérations avant le recalcul du chemin
 
@@ -181,7 +181,8 @@ def main():
     # Calculs des chemins pour les joueurs
     #-------------------------------
 
-    dico = dict() # Dictionnaire Coop A*
+    dicoEq1 = dict() # Dictionnaire Coop A* pour l'équipe 1
+    dicoEq2 = dict() # Dictionnaire Coop A* pour l'équipe 2
 
     for j in range(nbPlayers) :
         g =np.ones((nbLignes,nbCols),dtype=bool)  # par defaut la matrice comprend des True 
@@ -205,7 +206,10 @@ def main():
             path = probleme.randomBestFirst(liste_prob[j])
 
         if (list_algo[j] == 3) :
-            path = probleme.coop_astar(liste_prob[j],dico)
+            if (players[j] in equipe1) :
+                path = probleme.coop_astar(liste_prob[j],dicoEq1)
+            else :
+                path = probleme.coop_astar(liste_prob[j],dicoEq2)
 
         if (list_algo[j] == 4) :
             path = probleme.astar(liste_prob[j])
@@ -269,7 +273,10 @@ def main():
                                 if (list_algo[j] == 2) :
                                     liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                                 if (list_algo[j] == 3) :
-                                    liste_path[j] = probleme.coop_astar(liste_prob[j],dico) # Pour parcourir en Coop A*
+                                    if (players[j] in equipe1) :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq1)
+                                    else :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq2) # Pour parcourir en Coop A*
                                 print(liste_path[j])
 
                                 # On retire la position de l'agent rencontre comme mur
@@ -293,7 +300,10 @@ def main():
                                 if (list_algo[j] == 2) :
                                     liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                                 if (list_algo[j] == 3) :
-                                    liste_path[j] = probleme.coop_astar(liste_prob[j],dico) # Pour parcourir en Coop A*
+                                    if (players[j] in equipe1) :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq1)
+                                    else :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq2) # Pour parcourir en Coop A*
                                 print(liste_path[j])
 
                                 # On retire la position de l'agent rencontre comme mur
@@ -316,7 +326,10 @@ def main():
                             if (list_algo[j] == 2) :
                                 liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                             if (list_algo[j] == 3) :
-                                liste_path[j] = probleme.coop_astar(liste_prob[j],dico) # Pour parcourir en Coop A*
+                                    if (players[j] in equipe1) :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq1)
+                                    else :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq2) # Pour parcourir en Coop A*
                             print(liste_path[j])
 
                             # On retire la position de l'agent rencontre comme mur
