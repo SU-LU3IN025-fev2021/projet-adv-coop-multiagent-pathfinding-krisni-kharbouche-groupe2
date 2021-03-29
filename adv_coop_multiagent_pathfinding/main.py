@@ -239,22 +239,22 @@ def main():
                                 # On retire la position de l'agent rencontre comme mur
                                 liste_prob[j].grid[l][c] = True
 
-                            if (posPlayers[k] == liste_path[j][0]) : # On vérifie que la case sur laquelle on souhaite se déplacer n'est pas déjà occupée par un joueur (avec posPlayers)
+                        elif (posPlayers[k] == liste_path[j][0]) : # On vérifie que la case sur laquelle on souhaite se déplacer n'est pas déjà occupée par un joueur (avec posPlayers)
                                 
-                                # Il y a collision entre agents
-                                print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
+                            # Il y a collision entre agents
+                            print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
 
-                                # On ajoute la position de l'agent rencontre comme mur temporairement
-                                l,c = liste_path[k][0]
-                                liste_prob[j].grid[l][c] = False
+                            # On ajoute la position de l'agent rencontre comme mur temporairement
+                            l,c = posPlayers[k]
+                            liste_prob[j].grid[l][c] = False
 
-                                # liste_path[j] = probleme.astar(liste_prob[j]) # Pour parcourir en A*
-                                liste_path[j] = probleme.greedyBestFirst(liste_prob[j]) # Pour parcourir en GreedyBestFirst
-                                print(liste_path[j])
-                                # liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
+                            # liste_path[j] = probleme.astar(liste_prob[j]) # Pour parcourir en A*
+                            liste_path[j] = probleme.greedyBestFirst(liste_prob[j]) # Pour parcourir en GreedyBestFirst
+                            print(liste_path[j])
+                            # liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
 
-                                # On retire la position de l'agent rencontre comme mur
-                                liste_prob[j].grid[l][c] = True
+                            # On retire la position de l'agent rencontre comme mur
+                            liste_prob[j].grid[l][c] = True
                             
 
                 # Déplacement du joueur
