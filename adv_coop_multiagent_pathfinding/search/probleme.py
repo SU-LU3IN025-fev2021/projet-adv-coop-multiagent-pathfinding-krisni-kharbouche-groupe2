@@ -401,7 +401,7 @@ def coop_astar(p, dico, verbose=False,stepwise=False):
         path.append(n.etat)
         n = n.pere
 
-    print("A* - Temps de calcul:", time.time() - startTime)
+    print("Coop A* - Temps de calcul:", time.time() - startTime)
 
     t = len(path)
     for (x,y) in path:

@@ -239,12 +239,14 @@ def main():
                                     liste_path[j] = probleme.greedyBestFirst(liste_prob[j]) # Pour parcourir en GreedyBestFirst
                                 if (list_algo[j] == 2) :
                                     liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
+                                if (list_algo[j] == 3) :
+                                    liste_path[j] = probleme.coop_astar(liste_prob[j]) # Pour parcourir en Coop A*
                                 print(liste_path[j])
 
                                 # On retire la position de l'agent rencontre comme mur
                                 liste_prob[j].grid[l][c] = True
 
-                        elif (posPlayers[k] == liste_path[j][0]) : # Le joueur comparé est statique sur une case 
+                        elif (posPlayers[k] == liste_path[j][0]) : # Le joueur comparé est statique sur une case, comme un mur
                                 
                             # Il y a collision entre agents
                             print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
