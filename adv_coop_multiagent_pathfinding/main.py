@@ -179,10 +179,6 @@ def main():
     #-------------------------------
     # Boucle principale de déplacements 
     #-------------------------------
-    
-    #-------------------------------
-    # Déplacements sans random
-    #-------------------------------
 
     posPlayers = initStates
     it = 0
