@@ -40,12 +40,7 @@ game = Game()
 def init(_boardname=None):
     global player,game
     name = _boardname if _boardname is not None else 'demoMap'
-<<<<<<< HEAD
-    name = 'testMap'
-=======
-    # name = 'exAdvCoopMap'
-    name = 'bridgeMap'
->>>>>>> d6cf438fde1123b81568609bf57f051eaef2fdb2
+    name = 'TestMap'
     game = Game('Cartes/' + name + '.json', SpriteBuilder)
     game.O = Ontology(True, 'SpriteSheet-32x32/tiny_spritesheet_ontology.csv')
     game.populate_sprite_names(game.O)
@@ -162,7 +157,7 @@ def main():
     # Compteur de stratégies
     nbStrats = 7
 
-    list_algo = [1, 1] # Hypothese : len(list_algo) == nbPlayers
+    list_algo = [4, 4] # Hypothese : len(list_algo) == nbPlayers
     liste_timer = [-1] * nbPlayers # Les timers sont utilisés dans certains algorithmes, ils seront initialisés plus tard
     timer = 5 # Nombre d'itérations avant le recalcul du chemin
 
