@@ -11,7 +11,7 @@ import heapq
 from abc import ABCMeta, abstractmethod
 import functools
 import time
-
+import random
 
 
 def distManhattan(p1,p2):
@@ -185,6 +185,9 @@ def astar(p,verbose=False,stepwise=False):
     while n!=None :
         path.append(n.etat)
         n = n.pere
+
+    print("A* - Temps de calcul:", time.time() - startTime)
+
     return path[::-1] # extended slice notation to reverse list
 
 ###############################################################################
@@ -318,7 +321,8 @@ def randomBestFirst(p) :
                 openNodes.append(n)
 
         # Le nouveau noeud optimal est le premier de la liste des noeuds ouverts
-        bestNode = openNodes[0]
+        randV = random.randint(0, len(openNodes) - 1)
+        bestNode = openNodes[randV]
 
     # On renvoie le chemin jusqu'au but
     n = bestNode
@@ -331,6 +335,7 @@ def randomBestFirst(p) :
     print("Random Best First - Temps de calcul:", time.time() - startTime)
 
     return path[::-1]
+
 ###############################################################################
 # AUTRES ALGOS DE RESOLUTIONS...
 ###############################################################################
