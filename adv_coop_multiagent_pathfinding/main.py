@@ -147,6 +147,7 @@ def main():
     # Calculs des chemins pour les joueurs
     #-------------------------------
 
+    dico = dict()
     for j in range(nbPlayers) :
         g =np.ones((nbLignes,nbCols),dtype=bool)  # par defaut la matrice comprend des True 
 
@@ -166,7 +167,7 @@ def main():
         if (list_algo[j] == 2) :
             path = probleme.randomBestFirst(liste_prob[j])
         if (list_algo[j] == 3) :
-            path = probleme.coop_astar(liste_prob[j])
+            path = probleme.coop_astar(liste_prob[j],dico)
 
 
         # On ajoute le path à la liste des paths
@@ -295,6 +296,7 @@ def main():
     
     print ("Scores:", score)
     print("Temps de parcours:", liste_temps)
+    print(dico.keys())
     pygame.quit()
     
        

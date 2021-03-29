@@ -408,7 +408,7 @@ def coop_astar(p, dico, verbose=False,stepwise=False):
         if dico[x,y,t] != 0:
             print("ERREUR")
             return 1
-        dico[x,y,t] != 1
+        dico[x,y,t] = 1
         t+=1
 
     return path[::-1] # extended slice notation to reverse list
