@@ -219,7 +219,6 @@ def main():
                                 # On retire la position de l'agent rencontre comme mur
                                 liste_prob[j].grid[l][c] = True
 
-                            """
                             # Cette vérification permet d'assurer encore plus qu'il n y aura pas de collisions
                             if (liste_prob[k].init == liste_path[j][0]) : # On vérifie que la case sur laquelle on souhaite se déplacer n'est pas déjà occupée par un joueur (avec init)
                                 
@@ -241,7 +240,6 @@ def main():
 
                                 # On retire la position de l'agent rencontre comme mur
                                 liste_prob[j].grid[l][c] = True
-                            """
 
                         elif (posPlayers[k] == liste_path[j][0]) : # Le joueur comparé est statique sur une case 
                                 

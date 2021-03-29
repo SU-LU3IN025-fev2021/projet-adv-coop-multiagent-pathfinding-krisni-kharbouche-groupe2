@@ -321,8 +321,7 @@ def randomBestFirst(p) :
                 openNodes.append(n)
 
         # Le nouveau noeud optimal est le premier de la liste des noeuds ouverts
-        randV = random.randint(0, len(openNodes) - 1)
-        bestNode = openNodes[randV]
+        bestNode = openNodes[0]
 
     # On renvoie le chemin jusqu'au but
     n = bestNode
@@ -341,8 +340,7 @@ def randomBestFirst(p) :
 ###############################################################################
 
 ###############################################################################
-# ALGO A* coop
-# 
+# ALGO A* COOP
 ###############################################################################
 
 def coop_astar(p, dico, verbose=False,stepwise=False):
