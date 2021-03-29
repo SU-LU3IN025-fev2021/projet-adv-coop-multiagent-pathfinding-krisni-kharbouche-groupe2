@@ -130,8 +130,8 @@ def main():
 
     # Vérification des valeurs dans list_algo
     for i in range(len(list_algo)) :
-        if ((list_algo[i] < 0) or (list_algo[i] > 2)) : # Une valeur non-existante d'algo a été attribuée
-            list_algo[i] = random.randint(0, 2) # On donne un algo aléatoire au joueur j
+        if ((list_algo[i] < 0) or (list_algo[i] > 3)) : # Une valeur non-existante d'algo a été attribuée
+            list_algo[i] = random.randint(0, 3) # On donne un algo aléatoire au joueur j
 
 
     if (len(list_algo) != nbPlayers) :
@@ -141,7 +141,7 @@ def main():
 
         # On attribue aléatoirement des algos aux joueurs
         for i in range(nbPlayers) :
-            list_algo.append(random.randint(0, 2))
+            list_algo.append(random.randint(0, 3))
 
     #-------------------------------
     # Calculs des chemins pour les joueurs
