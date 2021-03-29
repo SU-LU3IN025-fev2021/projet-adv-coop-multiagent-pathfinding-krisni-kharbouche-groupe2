@@ -125,7 +125,8 @@ def main():
     # 0 : A*
     # 1 : GreedyBestFirst
     # 2 : RandomBestFirst
-    list_algo = [0, 0, 0, 0, 0, 0] # Hypothese : len(list_algo) == nbPlayers
+    # 3 : Coop_astar
+    list_algo = [3, 3, 3, 0, 0, 0] # Hypothese : len(list_algo) == nbPlayers
 
     # Vérification des valeurs dans list_algo
     for i in range(len(list_algo)) :
@@ -164,6 +165,9 @@ def main():
             path = probleme.greedyBestFirst(liste_prob[j])
         if (list_algo[j] == 2) :
             path = probleme.randomBestFirst(liste_prob[j])
+        if (list_algo[j] == 3) :
+            path = probleme.coop_astar(liste_prob[j])
+
 
         # On ajoute le path à la liste des paths
         liste_path.append(path)

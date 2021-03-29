@@ -145,7 +145,7 @@ def astar(p,verbose=False,stepwise=False):
     # VERSION 1 --- On suppose qu'un noeud en réserve n'est jamais ré-étendu
     # Hypothèse de consistence de l'heuristique        
         
-        if p.immatriculation(bestNoeud.etat) not in reserve:            
+        if p.immatriculation(bestNoeud.etat) not in reserve:      
             reserve[p.immatriculation(bestNoeud.etat)] = bestNoeud.g #maj de reserve
             nouveauxNoeuds = bestNoeud.expand(p)
             for n in nouveauxNoeuds:
@@ -341,10 +341,77 @@ def randomBestFirst(p) :
 ###############################################################################
 
 ###############################################################################
-# GREDDY BEST FIRST
-# On établit deux listes de Noeud (une liste de noeuds ouverts et une liste de noeuds fermés)
-# Les noeuds ouverts sont ceux que l'on étudie
-# Les noeuds fermés sont ceux que l'on a déjà étudié
-# Le but est d'étudier le noeud le plus prometteur dans la liste des noeuds ouverts
-# Prometteur = meilleure distance heuristique par rapport au but (distance de Manhantan)
+# ALGO A* coop
+# 
 ###############################################################################
+
+def coop_astar(p, dico, verbose=False,stepwise=False):
+    startTime = time.time()
+
+    nodeInit = Noeud(p.init,0,None)
+    frontiere = [(nodeInit.g+p.h_value(nodeInit.etat,p.but),nodeInit)] 
+
+    reserve = {}        
+    bestNoeud = nodeInit
+    
+    while frontiere != [] and not p.estBut(bestNoeud.etat):              
+        (min_f,bestNoeud) = heapq.heappop(frontiere)
+        
+    # VERSION 1 --- On suppose qu'un noeud en réserve n'est jamais ré-étendu
+    # Hypothèse de consistence de l'heuristique        
+        
+        if p.immatriculation(bestNoeud.etat) not in reserve:  
+            (x,y) = bestNoeud.etat
+            if (dico[x,y,p.h_value(nodeInit.etat,p.but)]==0):          
+                reserve[p.immatriculation(bestNoeud.etat)] = bestNoeud.g #maj de reserve
+                nouveauxNoeuds = bestNoeud.expand(p)
+                for n in nouveauxNoeuds:
+                    f = n.g+p.h_value(n.etat,p.but)
+                    heapq.heappush(frontiere, (f,n))
+
+    # TODO: VERSION 2 --- Un noeud en réserve peut revenir dans la frontière        
+        
+        stop_stepwise=""
+        if stepwise==True:
+            stop_stepwise = input("Press Enter to continue (s to stop)...")
+            print ("best", min_f, "\n", bestNoeud)
+            print ("Frontière: \n", frontiere)
+            print ("Réserve:", reserve)
+            if stop_stepwise=="s":
+                stepwise=False
+    
+            
+    # Mode verbose            
+    # Affichage des statistiques (approximatives) de recherche   
+    # et les differents etats jusqu'au but
+    if verbose:
+        bestNoeud.trace(p)          
+        print ("=------------------------------=")
+        print ("Nombre de noeuds explorés", len(reserve))
+        c=0
+        for (f,n) in frontiere:
+            if p.immatriculation(n.etat) not in reserve:
+                c+=1
+        print ("Nombre de noeuds de la frontière", c)
+        print ("Nombre de noeuds en mémoire:", c + len(reserve))
+        print ("temps de calcul:", time.time() - startTime)
+        print ("=------------------------------=")
+     
+    n=bestNoeud
+    path = []
+    while n!=None :
+        path.append(n.etat)
+        n = n.pere
+
+    print("A* - Temps de calcul:", time.time() - startTime)
+
+    t = 0
+    for (x,y) in path:
+        if dico[x,y,t] != 0:
+            print("ERREUR")
+            return 1
+        dico[x,y,t] != 1
+        t+=1
+
+    return path[::-1] # extended slice notation to reverse list
+
