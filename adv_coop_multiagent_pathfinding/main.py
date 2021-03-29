@@ -143,19 +143,28 @@ def main():
 
     #-------------------------------
     # Attribution des algos de recherche
-    #-------------------------------
-
+    #
     # Indice d'algo de recherche :
     # 0 : A*
     # 1 : GreedyBestFirst
     # 2 : RandomBestFirst
-    # 3 : Coop_astar
-    list_algo = [3, 3, 3, 3, 3, 3] # Hypothese : len(list_algo) == nbPlayers
+    # 3 : CoopAstar
+    # 4 : A* avec recalcul du chemin chaque N itérations
+    # 5 : GreedyBestFirst avec recalcul du chemin chaque N itérations
+    # 6 : RandomBestFirst avec recalcul du chemin chaque N itérations
+    #-------------------------------
+
+    # Compteur de stratégies
+    nbStrats = 7
+
+    list_algo = [0, 0, 0, 0, 0, 0] # Hypothese : len(list_algo) == nbPlayers
+    liste_timer = [-1, -1, -1, -1, -1, -1] # Les timers sont utilisés dans certains algorithmes, ils seront initialisés plus tard
+    timer = 5 # Nombre d'itérations avant le recalcul du chemin
 
     # Vérification des valeurs dans list_algo
     for i in range(len(list_algo)) :
-        if ((list_algo[i] < 0) or (list_algo[i] > 3)) : # Une valeur non-existante d'algo a été attribuée
-            list_algo[i] = random.randint(0, 3) # On donne un algo aléatoire au joueur j
+        if ((list_algo[i] < 0) or (list_algo[i] >= nbStrats)) : # Une valeur non-existante d'algo a été attribuée
+            list_algo[i] = random.randint(0, nbStrats - 1) # On donne un algo aléatoire au joueur j
 
 
     if (len(list_algo) != nbPlayers) :
@@ -165,17 +174,18 @@ def main():
 
         # On attribue aléatoirement des algos aux joueurs
         for i in range(nbPlayers) :
-            list_algo.append(random.randint(0, 3))
+            list_algo.append(random.randint(0, nbStrats - 1))
 
     #-------------------------------
     # Calculs des chemins pour les joueurs
     #-------------------------------
 
-    dico = dict()
+    dico = dict() # Dictionnaire Coop A*
+
     for j in range(nbPlayers) :
         g =np.ones((nbLignes,nbCols),dtype=bool)  # par defaut la matrice comprend des True 
 
-        for w in wallStates:            # putting False for walls
+        for w in wallStates: # putting False for walls
             g[w]=False
 
         liste_prob.append(ProblemeGrid2D(initStates[j],objectifs[j],g,'manhattan')) # On ajoute le probleme à la liste des problèmes
@@ -186,12 +196,27 @@ def main():
         # On crée le path vers l'objectif avec l'algorithme de notre choix (choix effectue dans liste_algo plus haut)
         if (list_algo[j] == 0) :
             path = probleme.astar(liste_prob[j])
+
         if (list_algo[j] == 1) :
             path = probleme.greedyBestFirst(liste_prob[j])
+
         if (list_algo[j] == 2) :
             path = probleme.randomBestFirst(liste_prob[j])
+
         if (list_algo[j] == 3) :
             path = probleme.coop_astar(liste_prob[j],dico)
+
+        if (list_algo[j] == 4) :
+            path = probleme.greedyBestFirst(liste_prob[j])
+            liste_timer[j] = timer
+
+        if (list_algo[j] == 5) :
+            path = probleme.greedyBestFirst(liste_prob[j])
+            liste_timer[j] = timer
+            
+        if (list_algo[j] == 6) :
+            path = probleme.greedyBestFirst(liste_prob[j])
+            liste_timer[j] = timer
 
 
         # On ajoute le path à la liste des paths
@@ -334,7 +359,7 @@ def main():
             print("Temps de parcours total de l'équipe 2 :", sum(liste_temps[effectifEquipe::]))
             break
 
-        if (score_eq1 == 3) and (score_eq2 != 3) :
+        if (score_eq1 != 3) and (score_eq2 == 3) :
             # L'équipe 2 a gagné
             print("\nLes joueurs de l'équipe 2 ont tous récupéré leurs objectifs!\nScore Equipe 1 =", score_eq1, "\tScore Equipe 2 =", score_eq2)
             print("Temps de parcours total de l'équipe 1 :", sum(liste_temps[0:effectifEquipe]))
@@ -353,7 +378,6 @@ def main():
     
     print ("\nScores par joueur :", score)
     print("Temps de parcours par joueur :", liste_temps)
-    print(dico.keys())
     pygame.quit()
     
        
