@@ -262,6 +262,11 @@ def main():
                                 # Il y a collision entre agents
                                 print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
 
+                                # On vérifie si le joueur utilise un timer
+                                if (liste_timer[j] != -1) :
+                                    # On réinitialise le timer du joueur
+                                    liste_timer[j] = timer
+
                                 # On ajoute la position de l'agent rencontre comme mur temporairement
                                 l,c = liste_path[k][0]
                                 liste_prob[j].grid[l][c] = False
@@ -289,6 +294,11 @@ def main():
                                 # Il y a collision entre agents
                                 print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
 
+                                # On vérifie si le joueur utilise un timer
+                                if (liste_timer[j] != -1) :
+                                    # On réinitialise le timer du joueur
+                                    liste_timer[j] = timer
+
                                 # On ajoute la position de l'agent rencontre comme mur temporairement
                                 l,c = liste_path[k][0]
                                 liste_prob[j].grid[l][c] = False
@@ -314,6 +324,11 @@ def main():
                                 
                             # Il y a collision entre agents
                             print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
+
+                            # On vérifie si le joueur utilise un timer
+                            if (liste_timer[j] != -1) :
+                                # On réinitialise le timer du joueur
+                                liste_timer[j] = timer
 
                             # On ajoute la position de l'agent rencontre comme mur temporairement
                             l,c = posPlayers[k]
