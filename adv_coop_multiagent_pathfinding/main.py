@@ -364,6 +364,12 @@ def main():
                             liste_path[j] = probleme.greedyBestFirst(liste_prob[j]) # Pour parcourir en GreedyBestFirst
                         if (list_algo[j] == 2) :
                             liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
+                        if (list_algo[j] == 3) :
+                            if (players[j] in equipe1) :
+                                liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq1)
+                            else :
+                                liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq2) # Pour parcourir en Coop A*
+                            print(liste_path[j])
 
                         # On remet à jour le compteur
                         liste_timer[j] = timer
