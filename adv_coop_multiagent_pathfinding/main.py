@@ -205,7 +205,7 @@ def main():
                 for k in range(nbPlayers) :
                     if (k != j) :
                         if (len(liste_path[k]) != 0) :
-                            if (liste_path[k][0] == liste_path[j][0]) :
+                            if (liste_path[k][0] == liste_path[j][0]) : # On vérifie qu'un autre joueur ne vas pas se déplacer sur la case où le joueur va se déplacer
                                 
                                 # Il y a collision entre agents
                                 print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
@@ -222,7 +222,7 @@ def main():
                                 # On retire la position de l'agent rencontre comme mur
                                 liste_prob[j].grid[l][c] = True
 
-                            if (liste_prob[k].init == liste_path[j][0]) :
+                            if (liste_prob[k].init == liste_path[j][0]) : # On vérifie que la case sur laquelle on souhaite se déplacer n'est pas déjà occupée par un joueur (avec init)
                                 
                                 # Il y a collision entre agents
                                 print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
@@ -239,7 +239,7 @@ def main():
                                 # On retire la position de l'agent rencontre comme mur
                                 liste_prob[j].grid[l][c] = True
 
-                            if (posPlayers[k] == liste_path[j][0]) :
+                            if (posPlayers[k] == liste_path[j][0]) : # On vérifie que la case sur laquelle on souhaite se déplacer n'est pas déjà occupée par un joueur (avec posPlayers)
                                 
                                 # Il y a collision entre agents
                                 print("Collisions entre les joueurs", j, "et", k, ". Recalcul du chemin pour le joueur ", j, ".")
