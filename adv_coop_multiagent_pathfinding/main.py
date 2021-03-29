@@ -194,7 +194,7 @@ def main():
 
             # On vérifie si le joueur n'a pas terminé son chemin
             if (len(liste_path[j]) != 0) : 
-
+                dico = dict()
                 # Gestion de la collision avec d'autres joueurs
                 for k in range(nbPlayers) :
                     if (k != j) : # On ne veut pas comparer un joueur avec lui-meme
@@ -216,7 +216,7 @@ def main():
                                 if (list_algo[j] == 2) :
                                     liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                                 if (list_algo[j] == 3) :
-                                    liste_path[j] = probleme.coop_astar(liste_prob[j]) # Pour parcourir en Coop A*
+                                    liste_path[j] = probleme.coop_astar(liste_prob[j],dico) # Pour parcourir en Coop A*
                                 print(liste_path[j])
 
                                 # On retire la position de l'agent rencontre comme mur
@@ -240,7 +240,7 @@ def main():
                                 if (list_algo[j] == 2) :
                                     liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                                 if (list_algo[j] == 3) :
-                                    liste_path[j] = probleme.coop_astar(liste_prob[j]) # Pour parcourir en Coop A*
+                                    liste_path[j] = probleme.coop_astar(liste_prob[j],dico) # Pour parcourir en Coop A*
                                 print(liste_path[j])
 
                                 # On retire la position de l'agent rencontre comme mur
@@ -262,6 +262,8 @@ def main():
                                 liste_path[j] = probleme.greedyBestFirst(liste_prob[j]) # Pour parcourir en GreedyBestFirst
                             if (list_algo[j] == 2) :
                                 liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
+                            if (list_algo[j] == 3) :
+                                liste_path[j] = probleme.coop_astar(liste_prob[j],dico) # Pour parcourir en Coop A*
                             print(liste_path[j])
 
                             # On retire la position de l'agent rencontre comme mur

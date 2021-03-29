@@ -360,12 +360,14 @@ def coop_astar(p, dico, verbose=False,stepwise=False):
         
         if p.immatriculation(bestNoeud.etat) not in reserve:  
             (x,y) = bestNoeud.etat
-            if (dico[x,y,p.h_value(nodeInit.etat,p.but)]==0):          
+            if ((x,y,p.h_value(nodeInit.etat,p.but)) not in dico):          
                 reserve[p.immatriculation(bestNoeud.etat)] = bestNoeud.g #maj de reserve
                 nouveauxNoeuds = bestNoeud.expand(p)
                 for n in nouveauxNoeuds:
                     f = n.g+p.h_value(n.etat,p.but)
                     heapq.heappush(frontiere, (f,n))
+            else: 
+                print("Je cherche une autre solution")
 
     # TODO: VERSION 2 --- Un noeud en réserve peut revenir dans la frontière        
         
@@ -403,14 +405,17 @@ def coop_astar(p, dico, verbose=False,stepwise=False):
 
     print("Coop A* - Temps de calcul:", time.time() - startTime)
 
-    t = len(path)
+    t = len(path)-1
     for (x,y) in path:
-        print("Salut mon Gars")
-        if dico[x,y,t] != 0:
+        if ((x,y,t) in dico):
             print("ERREUR")
             return 1
         dico[(x,y,t)] = 1
         t-=1
-
+    (x,y) = path[0]
+    for t in range(len(path)-1,150):
+        dico[(x,y,t)] = 1
     return path[::-1] # extended slice notation to reverse list
+
+
 
