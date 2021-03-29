@@ -215,7 +215,7 @@ def main():
                                 if (list_algo[j] == 2) :
                                     liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                                 if (list_algo[j] == 3) :
-                                    liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
+                                    liste_path[j] = probleme.coop_astar(liste_prob[j]) # Pour parcourir en Coop A*
                                 print(liste_path[j])
 
                                 # On retire la position de l'agent rencontre comme mur
