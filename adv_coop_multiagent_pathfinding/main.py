@@ -98,7 +98,31 @@ def main():
     def legal_position(row,col):
         # une position legale est dans la carte et pas sur un mur
         return ((row,col) not in wallStates) and row>=0 and row<nbLignes and col>=0 and col<nbCols
-        
+
+    #-------------------------------
+    # Initialisation des équipes et des scores d'équipe 
+    #-------------------------------
+    
+    effectifEquipe = int(nbPlayers / 2) # Nombre de joueurs par équipe
+
+    # On crée les équipes (remplissage)
+    equipe1 = list() # Joueurs Nord
+    equipe2 = list() # Joueurs Sud
+
+    # Hypothèse :
+    # Dans l'idéal, il faudrait qu'il y ait autant de joueurs des deux cotes de la carte afin de créer des équipes Nord et Sud d'effectif équivalent.
+
+    # On attribue les joueurs aux équipes
+    for i in range(nbPlayers) :
+        if (i < effectifEquipe) :
+            equipe1.append(players[i])
+        else :
+            equipe2.append(players[i])
+
+    # On crée les scores des équipes
+    score_eq1 = 0
+    score_eq2 = 0
+
     #-------------------------------
     # Attributaion aleatoire des fioles 
     #-------------------------------
@@ -126,7 +150,7 @@ def main():
     # 1 : GreedyBestFirst
     # 2 : RandomBestFirst
     # 3 : Coop_astar
-    list_algo = [3, 3, 3, 3, 3, 3] # Hypothese : len(list_algo) == nbPlayers
+    list_algo = [0, 0, 0, 0, 0, 0] # Hypothese : len(list_algo) == nbPlayers
 
     # Vérification des valeurs dans list_algo
     for i in range(len(list_algo)) :
@@ -263,7 +287,11 @@ def main():
                             if (list_algo[j] == 2) :
                                 liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                             if (list_algo[j] == 3) :
+<<<<<<< HEAD
                                 liste_path[j] = probleme.coop_astar(liste_prob[j],dico) # Pour parcourir en Coop A*
+=======
+                                    liste_path[j] = probleme.coop_astar(liste_prob[j]) # Pour parcourir en Coop A*
+>>>>>>> 352eb0b34d614349dfa0d52886c767ca795a2058
                             print(liste_path[j])
 
                             # On retire la position de l'agent rencontre comme mur
@@ -280,24 +308,55 @@ def main():
                 liste_prob[j].init = (row,col) # On modifie l'état initial du probleme
                 liste_path[j] = liste_path[j][1::] # On supprime le premier élément de la liste
 
-                # Dans le cas où le chemin est vide, on ajoute l'état final du joueur comme mur dans les problèmes de tout les joueurs
+                # Dans le cas où le chemin est vide, on ajoute l'état final du joueur comme mur dans les problèmes de tout les joueurs (puisque le joueur reste statique désormais)
                 if (len(liste_path[j]) == 0) :
                     for i in range(nbPlayers) :
                         liste_prob[i].grid[row][col] = False
             
             print ("Tour de jeu", it, "- Position joueur", j, ":", row,col)
 
+            # On met à jour le score
             if (score[j] == 0) :
                 if (row,col) == objectifs[j]:
-                    score[j]+=1
+                    score[j] += 1
                     print("Le joueur", j, " a atteint son but!")
+
+                    # On met à jour le score des équipes
+                    if players[j] in equipe1 :
+                        score_eq1 += 1
+                    if players[j] in equipe2 :
+                        score_eq2 += 1
 
         # On passe a l'iteration suivante du jeu
         game.mainiteration()
+
+        # On arrete le jeu dans le cas où une équipe a récupéré tout ses objectifs
+        if (score_eq1 == 3) and (score_eq2 != 3) :
+            # L'équipe 1 a gagné
+            print("\nLes joueurs de l'équipe 1 ont tous récupéré leurs objectifs!\nScore Equipe 1 =", score_eq1, "\tScore Equipe 2 =", score_eq2)
+            print("Temps de parcours total de l'équipe 1 :", sum(liste_temps[0:effectifEquipe]))
+            print("Temps de parcours total de l'équipe 2 :", sum(liste_temps[effectifEquipe::]))
+            break
+
+        if (score_eq1 == 3) and (score_eq2 != 3) :
+            # L'équipe 2 a gagné
+            print("\nLes joueurs de l'équipe 2 ont tous récupéré leurs objectifs!\nScore Equipe 1 =", score_eq1, "\tScore Equipe 2 =", score_eq2)
+            print("Temps de parcours total de l'équipe 1 :", sum(liste_temps[0:effectifEquipe]))
+            print("Temps de parcours total de l'équipe 2 :", sum(liste_temps[effectifEquipe::]))
+            break
+
+        if (score_eq1 == 3) and (score_eq2 == 3) :
+            # L'équipe 1 et 2 ont gagné en meme temps. Il y a égalité
+            print("\nLes joueurs des deux équipes ont tous récupéré leurs objectifs!\nScore Equipe 1 =", score_eq1, "\tScore Equipe 2 =", score_eq2)
+            print("Temps de parcours total de l'équipe 1 :", sum(liste_temps[0:effectifEquipe]))
+            print("Temps de parcours total de l'équipe 2 :", sum(liste_temps[effectifEquipe::]))
+            break
+
+        # On actualise le nombre d'itérations
         it = it + 1
     
-    print ("Scores:", score)
-    print("Temps de parcours:", liste_temps)
+    print ("\nScores par joueur :", score)
+    print("Temps de parcours par joueur :", liste_temps)
     print(dico.keys())
     pygame.quit()
     
