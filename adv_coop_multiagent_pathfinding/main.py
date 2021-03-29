@@ -334,7 +334,7 @@ def main():
             print("Temps de parcours total de l'équipe 2 :", sum(liste_temps[effectifEquipe::]))
             break
 
-        if (score_eq1 == 3) and (score_eq2 != 3) :
+        if (score_eq1 != 3) and (score_eq2 == 3) :
             # L'équipe 2 a gagné
             print("\nLes joueurs de l'équipe 2 ont tous récupéré leurs objectifs!\nScore Equipe 1 =", score_eq1, "\tScore Equipe 2 =", score_eq2)
             print("Temps de parcours total de l'équipe 1 :", sum(liste_temps[0:effectifEquipe]))
