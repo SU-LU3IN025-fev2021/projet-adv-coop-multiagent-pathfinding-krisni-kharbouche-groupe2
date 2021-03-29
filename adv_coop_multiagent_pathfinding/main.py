@@ -150,7 +150,7 @@ def main():
     # 1 : GreedyBestFirst
     # 2 : RandomBestFirst
     # 3 : Coop_astar
-    list_algo = [0, 0, 0, 0, 0, 0] # Hypothese : len(list_algo) == nbPlayers
+    list_algo = [3, 3, 3, 3, 3, 3] # Hypothese : len(list_algo) == nbPlayers
 
     # Vérification des valeurs dans list_algo
     for i in range(len(list_algo)) :
@@ -287,11 +287,7 @@ def main():
                             if (list_algo[j] == 2) :
                                 liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                             if (list_algo[j] == 3) :
-<<<<<<< HEAD
                                 liste_path[j] = probleme.coop_astar(liste_prob[j],dico) # Pour parcourir en Coop A*
-=======
-                                    liste_path[j] = probleme.coop_astar(liste_prob[j]) # Pour parcourir en Coop A*
->>>>>>> 352eb0b34d614349dfa0d52886c767ca795a2058
                             print(liste_path[j])
 
                             # On retire la position de l'agent rencontre comme mur

@@ -368,7 +368,8 @@ def coop_astar(p, dico, verbose=False,stepwise=False):
                     heapq.heappush(frontiere, (f,n))
             else: 
                 print("Je cherche une autre solution")
-
+    if (frontiere == []):
+        print("Pas de chemin trouvé")
     # TODO: VERSION 2 --- Un noeud en réserve peut revenir dans la frontière        
         
         stop_stepwise=""
@@ -409,7 +410,7 @@ def coop_astar(p, dico, verbose=False,stepwise=False):
     for (x,y) in path:
         if ((x,y,t) in dico):
             print("ERREUR")
-            return 1
+            #return 1
         dico[(x,y,t)] = 1
         t-=1
     (x,y) = path[0]
