@@ -353,7 +353,6 @@ def main():
     
     print ("\nScores par joueur :", score)
     print("Temps de parcours par joueur :", liste_temps)
-    print(dico.keys())
     pygame.quit()
     
        
