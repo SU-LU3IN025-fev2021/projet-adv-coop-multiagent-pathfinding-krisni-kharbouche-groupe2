@@ -341,6 +341,8 @@ def randomBestFirst(p) :
 
 ###############################################################################
 # ALGO A* COOP
+# On part de l'algo astar donné et on ajoute en paramètre un dico partagé par tout les joueurs de la même équipe
+# qui permet de vérifier si la case dans laquelle l'algo veut nous déplacer n'est pas prise par un coéquipier à l'instant t
 ###############################################################################
 
 def coop_astar(p, dico, verbose=False,stepwise=False):
@@ -360,16 +362,17 @@ def coop_astar(p, dico, verbose=False,stepwise=False):
         
         if p.immatriculation(bestNoeud.etat) not in reserve:  
             (x,y) = bestNoeud.etat
-            if ((x,y,p.h_value(nodeInit.etat,p.but)) not in dico):          
+            if ((x,y,p.h_value(nodeInit.etat,p.but)) not in dico):  #On vérifie si la case est bien vide d'aucun allié 
+                                                                    #(i.e. cette case n'existe pas dans le dictionnaire)    
                 reserve[p.immatriculation(bestNoeud.etat)] = bestNoeud.g #maj de reserve
                 nouveauxNoeuds = bestNoeud.expand(p)
                 for n in nouveauxNoeuds:
                     f = n.g+p.h_value(n.etat,p.but)
                     heapq.heappush(frontiere, (f,n))
             else: 
-                print("Je cherche une autre solution")
+                print("Je cherche une autre solution")  #La case est deja prise, on cherche un chemin alternatif
     if (frontiere == []):
-        print("Pas de chemin trouvé")
+        print("Pas de chemin trouvé")   #On n'a pas pu trouvé de chemin alternatif
     # TODO: VERSION 2 --- Un noeud en réserve peut revenir dans la frontière        
         
         stop_stepwise=""
@@ -407,14 +410,14 @@ def coop_astar(p, dico, verbose=False,stepwise=False):
     print("Coop A* - Temps de calcul:", time.time() - startTime)
 
     t = len(path)-1
-    for (x,y) in path:
-        if ((x,y,t) in dico):
+    for (x,y) in path:  #On parcourt le chemin trouvé afin de créer les clés dans le dictionnaire qui correspondent au chemin
+        """if ((x,y,t) in dico):
             print("ERREUR")
-            #return 1
+            return 1"""
         dico[(x,y,t)] = 1
         t-=1
-    (x,y) = path[0]
-    for t in range(len(path)-1,150):
+    (x,y) = path[0] #Il s'agit des coordonnées de l'objectif
+    for t in range(len(path)-1,150):    #On remplit le dico de [x,y,len(path)-1] à [x,y,150] avec len(path)-1 qui est le moment où le joueur atteint son objectif
         dico[(x,y,t)] = 1
     return path[::-1] # extended slice notation to reverse list
 

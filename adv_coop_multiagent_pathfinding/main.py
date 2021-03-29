@@ -157,7 +157,7 @@ def main():
     # Compteur de stratégies
     nbStrats = 7
 
-    list_algo = [0, 0, 0, 0, 0, 0] # Hypothese : len(list_algo) == nbPlayers
+    list_algo = [3, 3, 3, 3, 3, 3] # Hypothese : len(list_algo) == nbPlayers
     liste_timer = [-1, -1, -1, -1, -1, -1] # Les timers sont utilisés dans certains algorithmes, ils seront initialisés plus tard
     timer = 5 # Nombre d'itérations avant le recalcul du chemin
 
