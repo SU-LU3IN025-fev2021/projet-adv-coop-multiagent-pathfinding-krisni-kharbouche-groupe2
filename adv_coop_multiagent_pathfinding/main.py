@@ -40,7 +40,9 @@ game = Game()
 def init(_boardname=None):
     global player,game
     name = _boardname if _boardname is not None else 'demoMap'
-    name = 'TestMap'
+    name = 'testMap'
+    # name = 'exAdvCoopMap'
+    # name = 'bridgeMap'
     game = Game('Cartes/' + name + '.json', SpriteBuilder)
     game.O = Ontology(True, 'SpriteSheet-32x32/tiny_spritesheet_ontology.csv')
     game.populate_sprite_names(game.O)
@@ -212,17 +214,17 @@ def main():
 
         if (list_algo[j] == 4) :
             path = probleme.astar(liste_prob[j])
-            list_algo[j] == 0 # On considère cette stratégie comme la stratégie AStar classique désormais
+            list_algo[j] = 0 # On considère cette stratégie comme la stratégie AStar classique désormais
             liste_timer[j] = timer
 
         if (list_algo[j] == 5) :
             path = probleme.greedyBestFirst(liste_prob[j])
-            list_algo[j] == 1 # On considère cette stratégie comme la stratégie GreedyBestFirst classique désormais
+            list_algo[j] = 1 # On considère cette stratégie comme la stratégie GreedyBestFirst classique désormais
             liste_timer[j] = timer
 
         if (list_algo[j] == 6) :
             path = probleme.randomBestFirst(liste_prob[j])
-            list_algo[j] == 2 # On considère cette stratégie comme la stratégie RandomBestFirst classique désormais
+            list_algo[j] = 2 # On considère cette stratégie comme la stratégie RandomBestFirst classique désormais
             liste_timer[j] = timer
 
 
