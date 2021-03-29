@@ -335,3 +335,11 @@ def randomBestFirst(p) :
 # AUTRES ALGOS DE RESOLUTIONS...
 ###############################################################################
 
+###############################################################################
+# GREDDY BEST FIRST
+# On établit deux listes de Noeud (une liste de noeuds ouverts et une liste de noeuds fermés)
+# Les noeuds ouverts sont ceux que l'on étudie
+# Les noeuds fermés sont ceux que l'on a déjà étudié
+# Le but est d'étudier le noeud le plus prometteur dans la liste des noeuds ouverts
+# Prometteur = meilleure distance heuristique par rapport au but (distance de Manhantan)
+###############################################################################
