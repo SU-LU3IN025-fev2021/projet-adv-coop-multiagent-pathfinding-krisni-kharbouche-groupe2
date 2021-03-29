@@ -403,13 +403,14 @@ def coop_astar(p, dico, verbose=False,stepwise=False):
 
     print("A* - Temps de calcul:", time.time() - startTime)
 
-    t = 0
+    t = len(path)
     for (x,y) in path:
+        print("Salut mon Gars")
         if dico[x,y,t] != 0:
             print("ERREUR")
             return 1
-        dico[x,y,t] = 1
-        t+=1
+        dico[(x,y,t)] = 1
+        t-=1
 
     return path[::-1] # extended slice notation to reverse list
 
