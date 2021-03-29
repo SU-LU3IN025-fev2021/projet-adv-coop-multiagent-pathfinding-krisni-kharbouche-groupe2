@@ -40,11 +40,16 @@ game = Game()
 def init(_boardname=None):
     global player,game
     name = _boardname if _boardname is not None else 'demoMap'
+<<<<<<< HEAD
     name = 'testMap'
+=======
+    # name = 'exAdvCoopMap'
+    name = 'bridgeMap'
+>>>>>>> d6cf438fde1123b81568609bf57f051eaef2fdb2
     game = Game('Cartes/' + name + '.json', SpriteBuilder)
     game.O = Ontology(True, 'SpriteSheet-32x32/tiny_spritesheet_ontology.csv')
     game.populate_sprite_names(game.O)
-    game.fps = 5  # frames per second
+    game.fps = 5 # frames per second
     game.mainiteration()
     player = game.player
     
@@ -130,7 +135,7 @@ def main():
     objectifs = goalStates
     random.shuffle(objectifs)
     for j in range(nbPlayers) :
-        print("Objectif joueur ", j, ":", objectifs[0])
+        print("Objectif joueur ", j, ":", objectifs[j])
 
     #-------------------------------
     # Création de la liste des chemins, des problemes, de choix d'algo et de temps de parcours
@@ -157,8 +162,8 @@ def main():
     # Compteur de stratégies
     nbStrats = 7
 
-    list_algo = [0, 0] # Hypothese : len(list_algo) == nbPlayers
-    liste_timer = [-1, -1, -1, -1, -1, -1] # Les timers sont utilisés dans certains algorithmes, ils seront initialisés plus tard
+    list_algo = [1, 1] # Hypothese : len(list_algo) == nbPlayers
+    liste_timer = [-1] * nbPlayers # Les timers sont utilisés dans certains algorithmes, ils seront initialisés plus tard
     timer = 5 # Nombre d'itérations avant le recalcul du chemin
 
     # Vérification des valeurs dans list_algo
@@ -180,7 +185,8 @@ def main():
     # Calculs des chemins pour les joueurs
     #-------------------------------
 
-    dico = dict() # Dictionnaire Coop A*
+    dicoEq1 = dict() # Dictionnaire Coop A* pour l'équipe 1
+    dicoEq2 = dict() # Dictionnaire Coop A* pour l'équipe 2
 
     for j in range(nbPlayers) :
         g =np.ones((nbLignes,nbCols),dtype=bool)  # par defaut la matrice comprend des True 
@@ -204,18 +210,24 @@ def main():
             path = probleme.randomBestFirst(liste_prob[j])
 
         if (list_algo[j] == 3) :
-            path = probleme.coop_astar(liste_prob[j],dico)
+            if (players[j] in equipe1) :
+                path = probleme.coop_astar(liste_prob[j],dicoEq1)
+            else :
+                path = probleme.coop_astar(liste_prob[j],dicoEq2)
 
         if (list_algo[j] == 4) :
-            path = probleme.greedyBestFirst(liste_prob[j])
+            path = probleme.astar(liste_prob[j])
+            list_algo[j] == 0 # On considère cette stratégie comme la stratégie AStar classique désormais
             liste_timer[j] = timer
 
         if (list_algo[j] == 5) :
             path = probleme.greedyBestFirst(liste_prob[j])
+            list_algo[j] == 1 # On considère cette stratégie comme la stratégie GreedyBestFirst classique désormais
             liste_timer[j] = timer
-            
+
         if (list_algo[j] == 6) :
-            path = probleme.greedyBestFirst(liste_prob[j])
+            path = probleme.randomBestFirst(liste_prob[j])
+            list_algo[j] == 2 # On considère cette stratégie comme la stratégie RandomBestFirst classique désormais
             liste_timer[j] = timer
 
 
@@ -265,7 +277,10 @@ def main():
                                 if (list_algo[j] == 2) :
                                     liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                                 if (list_algo[j] == 3) :
-                                    liste_path[j] = probleme.coop_astar(liste_prob[j],dico) # Pour parcourir en Coop A*
+                                    if (players[j] in equipe1) :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq1)
+                                    else :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq2) # Pour parcourir en Coop A*
                                 print(liste_path[j])
 
                                 # On retire la position de l'agent rencontre comme mur
@@ -289,7 +304,10 @@ def main():
                                 if (list_algo[j] == 2) :
                                     liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                                 if (list_algo[j] == 3) :
-                                    liste_path[j] = probleme.coop_astar(liste_prob[j],dico) # Pour parcourir en Coop A*
+                                    if (players[j] in equipe1) :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq1)
+                                    else :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq2) # Pour parcourir en Coop A*
                                 print(liste_path[j])
 
                                 # On retire la position de l'agent rencontre comme mur
@@ -312,7 +330,10 @@ def main():
                             if (list_algo[j] == 2) :
                                 liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
                             if (list_algo[j] == 3) :
-                                liste_path[j] = probleme.coop_astar(liste_prob[j],dico) # Pour parcourir en Coop A*
+                                    if (players[j] in equipe1) :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq1)
+                                    else :
+                                        liste_path[j] = probleme.coop_astar(liste_prob[j],dicoEq2) # Pour parcourir en Coop A*
                             print(liste_path[j])
 
                             # On retire la position de l'agent rencontre comme mur
@@ -329,7 +350,30 @@ def main():
                 liste_prob[j].init = (row,col) # On modifie l'état initial du probleme
                 liste_path[j] = liste_path[j][1::] # On supprime le premier élément de la liste
 
-                # Dans le cas où le chemin est vide, on ajoute l'état final du joueur comme mur dans les problèmes de tout les joueurs (puisque le joueur reste statique désormais)
+                # On vérifie si le joueur utilise un timer
+                if (liste_timer[j] != -1) :
+                    # Le joueur possede un timer
+                    liste_timer[j] = liste_timer[j] - 1
+                    
+                    # Dans le cas où le timer est à 0
+                    if (liste_timer[j] == 0) :
+                        # On doit recalculer le chemin en fonction de la stratégie utilisée
+                        print("Timer arrivé à 0 pour le joueur", j, ".Recalcul de son itinéraire vers l'objectif.")
+                        
+                        # On recalcule le path vers l'objectif avec l'algorithme de notre choix (choix effectue dans liste_algo plus haut)
+                        if (list_algo[j] == 0) :
+                            liste_path[j] = probleme.astar(liste_prob[j]) # Pour parcourir en A*
+                        if (list_algo[j] == 1) :
+                            liste_path[j] = probleme.greedyBestFirst(liste_prob[j]) # Pour parcourir en GreedyBestFirst
+                        if (list_algo[j] == 2) :
+                            liste_path[j] = probleme.randomBestFirst(liste_prob[j]) # Pour parcourir en RandomBestFirst
+
+                        # On remet à jour le compteur
+                        liste_timer[j] = timer
+                    
+
+                # Dans le cas où le chemin est vide, on ajoute l'état final du joueur comme mur dans les problèmes de tout les joueurs 
+                # (puisque le joueur reste statique désormais)
                 if (len(liste_path[j]) == 0) :
                     for i in range(nbPlayers) :
                         liste_prob[i].grid[row][col] = False
@@ -350,23 +394,24 @@ def main():
 
         # On passe a l'iteration suivante du jeu
         game.mainiteration()
+        print()
 
         # On arrete le jeu dans le cas où une équipe a récupéré tout ses objectifs
-        if (score_eq1 == 3) and (score_eq2 != 3) :
+        if (score_eq1 == effectifEquipe) and (score_eq2 != effectifEquipe) :
             # L'équipe 1 a gagné
             print("\nLes joueurs de l'équipe 1 ont tous récupéré leurs objectifs!\nScore Equipe 1 =", score_eq1, "\tScore Equipe 2 =", score_eq2)
             print("Temps de parcours total de l'équipe 1 :", sum(liste_temps[0:effectifEquipe]))
             print("Temps de parcours total de l'équipe 2 :", sum(liste_temps[effectifEquipe::]))
             break
 
-        if (score_eq1 != 3) and (score_eq2 == 3) :
+        if (score_eq1 != effectifEquipe) and (score_eq2 == effectifEquipe) :
             # L'équipe 2 a gagné
             print("\nLes joueurs de l'équipe 2 ont tous récupéré leurs objectifs!\nScore Equipe 1 =", score_eq1, "\tScore Equipe 2 =", score_eq2)
             print("Temps de parcours total de l'équipe 1 :", sum(liste_temps[0:effectifEquipe]))
             print("Temps de parcours total de l'équipe 2 :", sum(liste_temps[effectifEquipe::]))
             break
 
-        if (score_eq1 == 3) and (score_eq2 == 3) :
+        if (score_eq1 == effectifEquipe) and (score_eq2 == effectifEquipe) :
             # L'équipe 1 et 2 ont gagné en meme temps. Il y a égalité
             print("\nLes joueurs des deux équipes ont tous récupéré leurs objectifs!\nScore Equipe 1 =", score_eq1, "\tScore Equipe 2 =", score_eq2)
             print("Temps de parcours total de l'équipe 1 :", sum(liste_temps[0:effectifEquipe]))
