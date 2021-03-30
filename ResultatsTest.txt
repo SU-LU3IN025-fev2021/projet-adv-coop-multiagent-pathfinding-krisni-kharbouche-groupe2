@@ -63,7 +63,7 @@ CoopAStar vs GreedyBestFirst : (5/5) (58,1/58,8)
 1(80/63)
 2(73/90)
 
-CoopAStar vs RandomBestFirst : (7/3) ()
+CoopAStar vs RandomBestFirst : (7/3) (50,6/51,2)
 1(37/53)
 1(12/13)
 2(64/62)
