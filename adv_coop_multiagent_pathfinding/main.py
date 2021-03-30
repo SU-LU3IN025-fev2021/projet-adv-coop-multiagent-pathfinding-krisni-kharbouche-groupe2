@@ -40,7 +40,7 @@ game = Game()
 def init(_boardname=None):
     global player,game
     name = _boardname if _boardname is not None else 'demoMap'
-    name = 'testMap'
+    name = 'Tunnel'
     # name = 'exAdvCoopMap'
     # name = 'bridgeMap'
     game = Game('Cartes/' + name + '.json', SpriteBuilder)
