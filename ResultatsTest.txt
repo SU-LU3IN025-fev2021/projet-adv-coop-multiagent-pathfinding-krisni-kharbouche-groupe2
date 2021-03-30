@@ -1,5 +1,7 @@
 Résultats Tests (3 vs 3, sur 10 tentatives, random placement objets) :
 
+Données - Score de victoire et moyenne de nombre de déplacement par partie
+
 A star VS GreedyBestFirst : (7/3) (57,3/56)
 1(50/55)
 1(92/76)
